@@ -2,7 +2,7 @@
 
 User Chart a helm manifests of `ledger-service`, you can have a look to other charts.
 
-All charts (`public-gateway-chart`,`public-user-chart`, `public-auth-chart`,`public-notification-chart` and `public-wallet-chart`). For this specific repository, you will need **Istio**, **PostgreSQL**, **OpenTelemetry Collector**, and **Vault**.
+All charts (`public-gateway-chart`,`public-user-chart`, `public-auth-chart`,`public-notification-chart` and `public-wallet-chart`). For this specific repository, you will need **Istio**, **PostgreSQL**, **Apache Kafka**, **OpenTelemetry Collector**, and **Vault**.
 
 ## 📦 GHCR Image
 🐳 [ghcr.io/anotherdanger/ledger-service:latest](https://github.com/anotherDanger/ledger-service/pkgs/container/ledger-service)
