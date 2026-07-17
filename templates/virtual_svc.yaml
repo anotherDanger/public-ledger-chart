@@ -12,7 +12,8 @@ spec:
     - istio-system/{{.Release.Name}}-gateway
   http:
     - match:
-        prefix: /ledger_v1.LedgerService
+        - uri:
+            prefix: /ledger_v1.LedgerService
       route:
         - destination:
             host: {{ include "ledger-chart.vs.host" . }}
