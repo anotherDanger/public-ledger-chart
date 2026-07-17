@@ -1,6 +1,6 @@
 # 🏦 Banking Simulation
 
-User Chart a helm manifests of `ledger-service`, you can have a look to other charts.
+Ledger Chart a helm manifests of `ledger-service`, you can have a look to other charts.
 
 All charts (`public-gateway-chart`,`public-user-chart`, `public-auth-chart`,`public-notification-chart` and `public-wallet-chart`). For this specific repository, you will need **Istio**, **PostgreSQL**, **Apache Kafka**, **OpenTelemetry Collector**, and **Vault**.
 
@@ -16,7 +16,7 @@ To deploy these dependencies, you can leverage the official third-party Helm cha
 ## ☸️ Connected Charts
 > ⚠️ **Dev Note:** Haven't completed it yet, so tired.
 
-* 🗺️ **Gateway Chart** (Coming soon)
+* 🗺️ **Gateway Chart** (https://github.com/anotherDanger/public-auth-chart.git)
 * 🔑 [**Auth Chart**] (https://github.com/anotherDanger/public-auth-chart.git)
 * 🔔 **Notification Chart** (https://github.com/anotherDanger/public-notification-chart.git)
 * 👤 [**User Chart**](https://github.com/anotherDanger/public-user-chart.git)
