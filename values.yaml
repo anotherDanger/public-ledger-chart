@@ -1,0 +1,44 @@
+app:
+  version: "v1.0.0"
+  port: 50051
+  image:
+    repository: "ghcr.io/anotherdanger/ledger-service"
+    tag: "latest"
+  affinity:
+    key: label
+    value: app
+
+service:
+  type: "ClusterIP"
+  grpcPort: 50051
+  grpcTargetPort: 50051
+
+pdb:
+  minAvailable: 1
+
+resources:
+  hpa:
+    minReplicas: 1
+    maxReplicas: 3
+    cpu:
+      utilization: 50
+  requests:
+    cpu: "50m"
+    memory: "128Mi"
+  limits:
+    cpu: "50m"
+    memory: "128Mi"
+
+env:
+  APP_SERVER_HOST: 0.0.0.0
+  APP_SERVER_PORT: 50051
+  APP_INTERNAL_PORT: 9090
+  APP_POSTGRES_HOST: 
+  APP_POSTGRES_PORT: 5432
+  APP_POSTGRES_USER: 
+  APP_POSTGRES_DB: ledger_db_test
+  APP_POSTGRES_SCHEMA: test
+  APP_KAFKA_HOST: 
+  APP_KAFKA_PORT: 9092
+  APP_OTEL_HOST: 
+  APP_OTEL_PORT: 4317 

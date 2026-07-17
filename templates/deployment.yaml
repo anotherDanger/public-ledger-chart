@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{.Release.Name}}-deployment
+  labels:
+    {{- include "chart.labels" . | indent 4}}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        app:  {{.Release.Name}}-app
+        version: {{.Values.app.version}}
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "ledger-service-role"
+        vault.hashicorp.com/agent-inject-secret-config: "secret/data/core-banking/ledger-service"
+        vault.hashicorp.com/agent-inject-template-config: |
+          {{ `{{- with secret "secret/data/core-banking/ledger-service" -}}` }}
+          export APP_POSTGRES_PWD="{{ `{{ .Data.data.APP_POSTGRES_PWD }}` }}"
+          {{ `{{- end -}}` }}
+    spec:
+      serviceAccountName: ledger-service-sa
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{.Values.app.affinity.key}}
+                operator: In
+                values:
+                - {{.Values.app.affinity.value}}
+      containers:
+      - image:  "{{.Values.app.image.repository}}:{{.Values.app.image.tag}}"
+        name: {{.Release.Name}}-app
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          if [ -f /vault/secrets/config ]; then
+            source /vault/secrets/config
+          fi
+          ./main 
+        env:
+          - name: APP_SERVER_HOST
+            value: {{ .Values.env.APP_SERVER_HOST | quote}}
+          - name: APP_SERVER_PORT
+            value: {{ .Values.env.APP_SERVER_PORT | quote}}
+          - name: APP_INTERNAL_PORT
+            value: {{ .Values.env.APP_INTERNAL_PORT | quote}}
+          - name: APP_POSTGRES_HOST
+            value: {{ .Values.env.APP_POSTGRES_HOST | quote}}
+          - name: APP_POSTGRES_PORT
+            value: {{ .Values.env.APP_POSTGRES_PORT | quote}}
+          - name: APP_POSTGRES_USER
+            value: {{ .Values.env.APP_POSTGRES_USER | quote}}
+          - name: APP_POSTGRES_PWD
+            value: {{ .Values.env.APP_POSTGRES_PWD | quote}}
+          - name: APP_POSTGRES_DB
+            value: {{ .Values.env.APP_POSTGRES_DB | quote}}
+          - name: APP_POSTGRES_SCHEMA
+            value: {{ .Values.env.APP_POSTGRES_SCHEMA | quote}}
+          - name: APP_KAFKA_HOST
+            value: {{ .Values.env.APP_KAFKA_HOST | quote}}
+          - name: APP_KAFKA_PORT
+            value: {{ .Values.env.APP_KAFKA_PORT | quote}}
+          - name: APP_OTEL_HOST
+            value: {{.Values.env.APP_OTEL_HOST | quote}}
+          - name: APP_OTEL_PORT
+            value: {{.Values.env.APP_OTEL_PORT | quote}}
+        resources:
+          requests:
+            memory: {{.Values.resources.requests.memory}}
+            cpu: {{.Values.resources.requests.cpu}}
+          limits:
+            memory: {{.Values.resources.limits.memory}}
+            cpu: {{.Values.resources.limits.cpu}}
+        ports:
+        - containerPort: {{.Values.app.port}}
+          name: grpc
+        livenessProbe:
+          httpGet: 
+            path: /healthz
+            port: 9090
+            scheme: HTTP
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 9090
+            scheme: HTTP
+          successThreshold: 1
+          failureThreshold: 3

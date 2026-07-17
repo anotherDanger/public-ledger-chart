@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name:  ledger-service-sa
+  labels:
+    {{- include "chart.labels" . | indent 4}}
+  namespace: {{.Release.Namespace}}

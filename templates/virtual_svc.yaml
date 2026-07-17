@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: {{.Release.Name}}-virtual-svc
+  namespace: {{.Release.Namespace}}
+  labels: 
+    {{- include "chart.labels" . | indent 4}}
+spec:
+  hosts:
+  - '*'
+  gateways:
+    - istio-system/{{.Release.Name}}-gateway
+  http:
+    - match:
+        prefix: /ledger_v1.LedgerService
+      route:
+        - destination:
+            host: {{ include "ledger-chart.vs.host" . }}
+            subset: v1
+          weight: 100
+
+
