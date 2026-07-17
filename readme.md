@@ -14,8 +14,6 @@ Ensure that **PostgreSQL** and **Kafka** are already **running** to pass the rea
 To deploy these dependencies, you can leverage the official third-party Helm charts available via **Artifact Hub**.
 
 ## ☸️ Connected Charts
-> ⚠️ **Dev Note:** Haven't completed it yet, so tired.
-
 * 🗺️ **Gateway Chart** (https://github.com/anotherDanger/public-auth-chart.git)
 * 🔑 [**Auth Chart**] (https://github.com/anotherDanger/public-auth-chart.git)
 * 🔔 **Notification Chart** (https://github.com/anotherDanger/public-notification-chart.git)
