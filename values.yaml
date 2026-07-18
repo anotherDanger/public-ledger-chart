@@ -16,6 +16,9 @@ service:
 pdb:
   minAvailable: 1
 
+gateway:
+  name: gateway
+
 resources:
   hpa:
     minReplicas: 1
